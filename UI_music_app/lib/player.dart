@@ -2,182 +2,134 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import './home.dart';
 
+
 class Player extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return _PlayerState();
   }
 }
-
 class _PlayerState extends State<Player> {
-  final audioPlayer = AudioPlayer();
-
-  Stream<PlayerState> get playerStateStream => audioPlayer.onPlayerStateChanged;
-  bool isPlaying = false;
-  bool isLoop = false;
+  late AudioPlayer audioPlayer;
+  bool isPlaying = true;
   bool isVolume = true;
-  Duration duration = Duration.zero;
+  bool isLoop = false;
   Duration position = Duration.zero;
+  Duration duration = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    audioPlayer.onPlayerStateChanged.listen((state) {
-      if (state == PlayerState.playing) {
-        isPlaying = true;
-      } else {
-        isPlaying = false;
-      }
-    });
-    audioPlayer.onDurationChanged.listen((newDuration) {
-      setState(() {
-        duration = newDuration;
-      });
-    });
-    audioPlayer.onPositionChanged.listen((newPosition) {
-      setState(() {
-        position = newPosition;
-      });
-    });
+    audioPlayer = AudioPlayer();
+    audioPlayer.setReleaseMode(ReleaseMode.stop);
   }
-  double calculateProgress() {
-    if (duration.inSeconds == 0) {
+
+
+  double _setValueSlider(){
+    if(duration == Duration.zero){
       return 0.0;
-    } else {
-      return position.inSeconds / duration.inSeconds;
+    }
+    else{
+      return position.inSeconds/duration.inSeconds;
     }
   }
+
   @override
   Widget build(BuildContext context) {
-    int sound = ModalRoute.of(context)!.settings.arguments as int;
+    String url = ModalRoute
+        .of(context)!
+        .settings
+        .arguments as String;
+    Source source = UrlSource(url);
+    if(isVolume ==false){
+      audioPlayer.setVolume(0.0);
+    }
+    else{
+      audioPlayer.setVolume(1.0);
+    }
+    if (isPlaying) {
+      audioPlayer.play(source);
+    }
+    else {
+      audioPlayer.pause();
+    }
+
     return SafeArea(
         child: Scaffold(
-      body: Column(
-        children: [
-          Image.asset(
-            "assets/images/profile.png",
-            width: double.infinity,
-            height: 300,
-            fit: BoxFit.fill,
-          ),
-          const Text(
-            "Alone in the Abyss",
-            style: TextStyle(fontSize: 24, color: Colors.amber),
-          ),
-          Text("Youlakou"),
-          Container(
-            margin: EdgeInsets.only(left: 300),
-            child: const Icon(
-              Icons.ios_share,
-              color: Colors.yellow,
-            ),
-          ),
-          Row(
+          body: Column(
             children: [
+              Image.asset(
+                "assets/images/profile.png",
+                width: double.infinity,
+                height: 300,
+                fit: BoxFit.fill,
+              ),
+              const Text(
+                "Alone in the Abyss",
+                style: TextStyle(fontSize: 24, color: Colors.amber),
+              ),
+              Text("Youlakou"),
               Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: const Text("Dynamic warmup |")),
-              Container(
-                  margin: EdgeInsets.only(left: 160),
-                  child: Text(duration.inMinutes.toString() + " min"))
-            ],
-          ),
-          Slider(
-            value: position.inSeconds.toDouble(),
-            min: 0.0,
-            max: duration.inSeconds.toDouble(),
-            onChanged: (value) {
-              setState(() {
-                position = Duration(seconds: value.toInt());
-                audioPlayer.seek(position);
-              });
-            },
-          ),
-          Row(
-            children: [
-              Expanded(child: Icon(Icons.skip_previous_rounded)),
-              Expanded(
-                  child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    isLoop = !isLoop;
-                  });
-                  if (isLoop) {
-                    audioPlayer.setReleaseMode(ReleaseMode.loop);
-                  } else {
-                    audioPlayer.setReleaseMode(ReleaseMode.release);
-                  }
-                },
-                child: Icon(isLoop ? Icons.repeat_one_rounded : Icons.repeat),
-              )),
-              Expanded(
-                  child: ElevatedButton(
-                onPressed: () {
-                  if (sound == 2) {
-                    setState(() {
-                      isPlaying = !isPlaying;
-                    });
-                    if (isPlaying) {
-                      audioPlayer.play(AssetSource('musics/Tranh_Duyen.mp3'));
-                    } else {
-                      audioPlayer.pause();
-                    }
-                  } else if (sound == 3) {
-                    setState(() {
-                      isPlaying = !isPlaying;
-                    });
-                    if (isPlaying) {
-                      audioPlayer
-                          .play(AssetSource('musics/Noi_Nay_Co_Anh.mp3'));
-                    } else {
-                      audioPlayer.pause();
-                    }
-                  } else {
-                    setState(() {
-                      isPlaying = !isPlaying;
-                    });
-                    if (isPlaying) {
-                      audioPlayer.play(AssetSource(
-                          'musics/Chung_Ta_Khong_Thuoc_Ve_Nhau.mp3'));
-                    } else {
-                      audioPlayer.pause();
-                    }
-                  }
-                },
-                child: Icon(
-                  isPlaying ? Icons.pause_rounded : Icons.play_arrow_rounded,
-                  size: 50,
+                margin: EdgeInsets.only(left: 300),
+                child: const Icon(
+                  Icons.ios_share,
+                  color: Colors.yellow,
                 ),
-              )),
-              Expanded(
-                  child: ElevatedButton(
+              ),
+              Row(
+                children: [
+                  Container(
+                      margin: EdgeInsets.only(left: 20),
+                      child: const Text("Dynamic warmup |")),
+                  Container(
+                      margin: EdgeInsets.only(left: 160),
+                      child: Text("${duration.inMinutes} min"))
+                ],
+              ),
+              Slider(
+                value: _setValueSlider(),
+                onChanged: (value) {
+                  setState(() {
+                    position = Duration(seconds: value.toInt());
+                    audioPlayer.seek(position);
+                  });
+                },
+              ),
+              Row(
+                children: [
+                  Expanded(child: IconButton(
+                      onPressed: (){
+
+                      },
+                      icon: _setIconLoop())),
+                  Expanded(child: IconButton(
+                      onPressed: (){
+
+                      },
+                      icon: Icon(Icons.skip_previous, size: 30,))),
+                  Expanded(child: IconButton(
                       onPressed: () {
                         setState(() {
-                          sound++;
-                          audioPlayer.play(AssetSource(
-                              'musics/Chung_Ta_Khong_Thuoc_Ve_Nhau.mp3'));
+                          isPlaying = !isPlaying;
                         });
                       },
-                      child: Icon(Icons.skip_next))),
-              Expanded(
-                  child: ElevatedButton(
-                      onPressed: () {
+                      icon: _setIconPlay())),
+                  Expanded(child: IconButton(
+                      onPressed: (){
+
+                      },
+                      icon: Icon(Icons.skip_next, size: 30,))),
+                  Expanded(child: IconButton(
+                      onPressed: (){
                         setState(() {
                           isVolume = !isVolume;
                         });
-                        if (isVolume == false) {
-                          audioPlayer.setVolume(0.0);
-                        } else {
-                          audioPlayer.setVolume(1.0);
-                        }
                       },
-                      child: isVolume
-                          ? Icon(Icons.volume_down_rounded)
-                          : Icon(Icons.volume_off_rounded)))
+                      icon: _setIconVolume()))
+                ],
+              )
             ],
-          )
-        ],
-      ),
+          ),
           bottomNavigationBar: BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             items: const <BottomNavigationBarItem>[
@@ -213,7 +165,7 @@ class _PlayerState extends State<Player> {
                 case 2:
                   Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context)=>Home()));
+                      MaterialPageRoute(builder: (context) => Home()));
                   break;
                 case 3:
                   print('Cart item tapped!');
@@ -224,6 +176,32 @@ class _PlayerState extends State<Player> {
               }
             },
           ),
-    ));
+        ));
+  }
+
+  Icon _setIconPlay() {
+    if (isPlaying) {
+      return Icon(Icons.pause, size: 40,);
+    }
+    else {
+      return Icon(Icons.play_arrow, size: 40,);
+    }
+  }
+  Icon _setIconVolume(){
+    if(isVolume == true){
+      return Icon(Icons.volume_up,size: 25,);
+    }
+    else{
+      return Icon(Icons.volume_off,size: 25,);
+    }
+  }
+
+  Icon _setIconLoop(){
+    if(isLoop){
+      return Icon(Icons.repeat_one_rounded);
+    }
+    else{
+      return Icon(Icons.repeat);
+    }
   }
 }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ui_music_app/gallery.dart';
 class Home extends StatefulWidget{
+  const Home({super.key});
+
   @override
   State<StatefulWidget> createState() {
     return _HomeState();
@@ -36,13 +38,13 @@ class _HomeState extends State<Home>{
                ],
              ),
              Container(
-               margin: EdgeInsets.only(top: 20),
+               margin: const EdgeInsets.only(top: 20),
                child: SizedBox(
                  width: 230,
                  child: ElevatedButton(
                    onPressed: () {
                      Navigator.push(context, MaterialPageRoute(
-                         builder: (context) => Gallery()
+                         builder: (context) =>  Gallery()
                      ));
                    },
                    style: ElevatedButton.styleFrom(
@@ -78,8 +80,8 @@ class _HomeState extends State<Home>{
                  )
              ),
              Container(
-               margin: EdgeInsets.only(top: 20),
-               child: Text(
+               margin: const EdgeInsets.only(top: 20),
+               child: const Text(
                  "by continuing you agree to terms \n"
                      "of services and  Privacy policy",
                  style: TextStyle(
