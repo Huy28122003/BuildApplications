@@ -162,12 +162,13 @@ class GalleryState extends State<Gallery> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => Player(),
-                                        settings: RouteSettings(arguments: data[i].preview_url)));
+                                        settings: RouteSettings(arguments: data[i])));
                               },
                               child: Column(
                                 children: [
-                                  Image.network(
-                                    "${data[i].image}",
+                                  FadeInImage.assetNetwork(
+                                    placeholder: 'assets/images/img9.png',
+                                    image: "${data[i].image}",
                                     width: 100,
                                   ),
                                   Text(
@@ -176,6 +177,7 @@ class GalleryState extends State<Gallery> {
                                       fontSize: 8,
                                     ),
                                   ),
+
                                 ],
                               ),
                             ),
@@ -213,11 +215,16 @@ class GalleryState extends State<Gallery> {
                       for (int i = 0; i < data.length; i++)
                         Row(
                           children: [
-                            Image.network("${data[i].image}"),
+                            FadeInImage.assetNetwork(
+                              placeholder: 'assets/images/img8.png',
+                              image: "${data[i].image}",
+                              width: 100,
+                            ),
+                            Expanded(child:
                             Text(
                               "${data[i].name}",
                               softWrap: true,
-                            ),
+                            ),)
                           ],
                         ),
                     ],
