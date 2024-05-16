@@ -18,7 +18,6 @@ class _PlayerState extends State<Player> {
   bool isLoop = false;
   Duration duration = Duration.zero;
   Duration position = Duration.zero;
-  String? nameTrack ;
 
   @override
   void initState() {
@@ -37,6 +36,9 @@ class _PlayerState extends State<Player> {
     Source source = UrlSource(track.preview_url);
     if(isPlaying ){
       audioPlayer.play(source);
+    }
+    else{
+      audioPlayer.pause();
     }
 
     return SafeArea(
