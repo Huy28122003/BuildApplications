@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ui_music_app/gallery.dart';
+import './gallery.dart';
 class Home extends StatefulWidget{
   const Home({super.key});
 

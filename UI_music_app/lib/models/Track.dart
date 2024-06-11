@@ -5,6 +5,11 @@ class Track {
 
   Track(this._name, this._preview_url, this._image);
 
+  LocalTrack(String name, String previewUrl) {
+    _name = name;
+    _preview_url = previewUrl;
+  }
+
   String get image => _image;
 
   set image(String value) {
