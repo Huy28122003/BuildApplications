@@ -19,3 +19,6 @@ void main() async {
 // thuc hien lam viec voi git nang cao
 
 // giai quyet conflict code hahahaha
+
+// giai quyet conflict code
+// toi la nguyen quang huy
