@@ -18,4 +18,8 @@ void main() async {
 // day la code tu remote new
 // thuc hien lam viec voi git nang cao
 
+// giai quyet conflict code
+// toi la nguyen quang huy
 // giai quyet conflict code hahahaha
+
+// okokokoko qua thu viec
