@@ -9,9 +9,13 @@ void main() async {
       debug: true,
       ignoreSsl: true
   );
+  // github nang cao
   runApp(MaterialApp(
       theme: ThemeData(brightness: Brightness.light), home: const Home()));
 }
 
 // hello
 // day la code tu remote new
+// thuc hien lam viec voi git nang cao
+
+
